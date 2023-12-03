@@ -19,12 +19,15 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     Vector3 moveAmount;
     Rigidbody rb;
     LineRenderer laser;
+    Camera playerCam;
 
     //synced properties
     bool laserEnabled = false;
-    Vector3 laserPosition0;
-    Vector3 laserPosition1;
-
+    //the point in global space that the laser is hitting
+    //I am doing it this way because it enables using PhotonTransformView for this property,
+    //which is much faster than sending the position as a Vector3 manually.
+    //otherwise the laser will look very choppy
+    public Transform laserHitpoint;
 
     private void Awake()
     {
@@ -34,10 +37,11 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     void Start()
     {
         laser = GetComponentInChildren<LineRenderer>();
+        playerCam = cameraHolder.GetComponentInChildren<Camera>();
         laser.enabled = false;
         if(!photonView.IsMine)
         {
-            Destroy(GetComponentInChildren<Camera>().gameObject);
+            Destroy(playerCam.gameObject);
             Destroy(rb);
             return;
         }
@@ -49,10 +53,11 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         if (!photonView.IsMine)
         {
             laser.enabled = laserEnabled;
-            laser.SetPosition(0, laserPosition0);
-            laser.SetPosition(1, laserPosition1);
+            laser.SetPosition(0, cameraHolder.transform.position);
+            laser.SetPosition(1, laserHitpoint.position);
             return;
         }
+
         Look();
         Move();
         Jump();
@@ -70,48 +75,47 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
         Ray ray = playerCam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
         RaycastHit hit;
-        // Debug.DrawLine(gunOrigin.position, Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 2)));
-        if(Input.GetButton("Fire1"))
+        laserEnabled = Input.GetButton("Fire1");
+        if(laserEnabled)
         {
-            laserPosition1 = ray.origin + ray.direction * 4;
-            laserPosition0 = playerCam.ScreenToWorldPoint(new Vector3(Screen.width / 8, Screen.height / 8, 0.1f));
+            laser.enabled = true;
+            Vector3 laserPosition0 = playerCam.ScreenToWorldPoint(new Vector3(Screen.width / 8, Screen.height / 8, 0.1f));
+            laser.SetPosition(0, laserPosition0);
+
+            //initialize laserPosition1 with the value that will be used if it is shot into space (IE, not hitting any object)
+            Vector3 laserPosition1 = ray.origin + ray.direction * 4;
             //if hit target
-            //showing laser in debugging
-            laserEnabled = Physics.Raycast(ray, out hit);
-            if(laserEnabled)
+            if(Physics.Raycast(ray, out hit))
             {
+                laserPosition1 = hit.point;
                 if(hit.transform.GetComponent<Target>())
                 {
                     //EXPLANATION:
                     //If a function is called on a networked object (IE, an object that has a PhotonView), it will only be called on the client that invoked it
-                    //However, Photon has a concept of "ownership".
+                    //However, Photon has a concept of "ownership". Unless that client happens to own that particualr object, no other clients will receive the update!
                     //updates to class members will only be sent to the rest of the server if they are made in the client that "owns" the object
-                    //PhotonView.RPC is a way around that - it sends a network message to the client owning that particular PhotonView, and instructs it to invoke some function itself.
+                    //PhotonView.RPC is a way around that - it sends a network message to the client owning that particular PhotonView, and instructs it to invoke the function itself.
                     float damage = laserDamage * Time.deltaTime;
                     hit.transform.GetComponent<PhotonView>().RPC("registerHit", RpcTarget.All, damage);
                 }
-                laserPosition1 = hit.point;
 
             }
-            laser.SetPosition(0, laserPosition0);
             laser.SetPosition(1, laserPosition1);
-            laser.enabled = true;
+            laserHitpoint.position = laserPosition1;
         }
+
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+
         if(stream.IsWriting)
         {
             stream.SendNext(laserEnabled);
-            stream.SendNext(laserPosition0);
-            stream.SendNext(laserPosition1);
         }
         if(stream.IsReading)
         {
             this.laserEnabled = (bool)stream.ReceiveNext();
-            this.laserPosition0 = (Vector3)stream.ReceiveNext();
-            this.laserPosition1 = (Vector3)stream.ReceiveNext();
         }
     }
 
