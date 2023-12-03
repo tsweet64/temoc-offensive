@@ -4,6 +4,8 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 using Photon.Realtime;
+using System;
+using Unity.Mathematics;
 
 //handles objects that can take damage and die, such as the player
 public class Target : MonoBehaviourPun, IPunObservable
@@ -64,9 +66,13 @@ public class Target : MonoBehaviourPun, IPunObservable
 
     public void Die()
     {
-        // PhotonNetwork.Destroy(gameObject);
         //TODO: figure out what to do upon death
-        health = 100;
-        transform.position = Vector3.zero;
+        if(GetComponent<PlayerController>())
+        {
+            health = 100;
+            GetComponent<PlayerController>().Respawn();
+        }
+        else
+            PhotonNetwork.Destroy(gameObject);
     }
 }

@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using Unity.VisualScripting;
 using System;
 //takes care of
 public class PlayerController : MonoBehaviourPun, IPunObservable
@@ -157,5 +154,13 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             return;
 
         rb.MovePosition(rb.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
+    }
+
+    public void Respawn()
+    {
+        SpawnPoint[] spawns = FindObjectsOfType<SpawnPoint>();
+        int spawnpoint = (int)UnityEngine.Random.Range(0, spawns.Length - 0.01f);
+        Debug.Log(spawns.Length + " " + spawnpoint);
+        transform.position = spawns[spawnpoint].transform.position;
     }
 }
