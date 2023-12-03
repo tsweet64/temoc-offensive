@@ -43,8 +43,10 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         {
             Destroy(playerCam.gameObject);
             Destroy(rb);
+            Destroy(GetComponentsInChildren<Canvas>()[0].gameObject);
             return;
         }
+        GetComponentInChildren<Canvas>().worldCamera = FindObjectOfType<Camera>();
         Cursor.lockState = CursorLockMode.Locked;
     }
     private void Update()
