@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     LineRenderer laser;
     Camera playerCam;
 
+    public Color color;
+
     //synced properties
     bool laserEnabled = false;
     //the point in global space that the laser is hitting
@@ -48,6 +50,8 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     }
     private void Update()
     {
+        GetComponent<Renderer>().material.color = color;
+        
         //on other clients, we have to update the position of the laser!
         if (!photonView.IsMine)
         {
@@ -56,6 +60,8 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             laser.SetPosition(1, laserHitpoint.position);
             return;
         }
+
+
 
         Look();
         Move();
@@ -111,10 +117,21 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         if(stream.IsWriting)
         {
             stream.SendNext(laserEnabled);
+
+            //Color.RGBToHSV is the most evil method i have ever seen in my life
+            float hue;
+            float saturation;
+            float value;
+            Color.RGBToHSV(color, out hue, out saturation, out value);
+            stream.SendNext(hue);
         }
         if(stream.IsReading)
         {
             this.laserEnabled = (bool)stream.ReceiveNext();
+            float hue = (float)stream.ReceiveNext();
+            Debug.Log(hue);
+            this.color = Color.HSVToRGB(hue, 0.75f, 1f);
+
         }
     }
 
@@ -160,7 +177,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     {
         SpawnPoint[] spawns = FindObjectsOfType<SpawnPoint>();
         int spawnpoint = (int)UnityEngine.Random.Range(0, spawns.Length - 0.01f);
-        Debug.Log(spawns.Length + " " + spawnpoint);
         transform.position = spawns[spawnpoint].transform.position;
     }
 }

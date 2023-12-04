@@ -10,8 +10,7 @@ using Unity.Mathematics;
 //handles objects that can take damage and die, such as the player
 public class Target : MonoBehaviourPun, IPunObservable
 {
-    // public static Material damageMaterial;
-    float health = 100;
+    public float health = 100;
     float overlayTimer = 0;
     HitTargetAnim hitOverlay;
     TMP_Text healthText;

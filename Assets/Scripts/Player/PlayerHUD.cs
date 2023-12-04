@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHUD : MonoBehaviourPun, IPunObservable
 {
     string playerTag;
-
+    [SerializeField] Image healthBar;
+    [SerializeField] TMP_Text playerName;
+    [SerializeField] Target player;
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        TMP_Text innerText = GetComponentInChildren<TMP_Text>();
         if(stream.IsReading)
         {
             playerTag = (string) stream.ReceiveNext();
-            innerText.text = playerTag;
+            playerName.text = playerTag;
         }
         if(stream.IsWriting)
             stream.SendNext(playerTag);
@@ -27,7 +29,11 @@ public class PlayerHUD : MonoBehaviourPun, IPunObservable
         if(photonView.IsMine)
         {
             playerTag = PhotonNetwork.NickName;
-            GetComponentInChildren<TMP_Text>().text = "";
+            // gameObject.SetActive(false);
+            foreach(Renderer r in gameObject.GetComponentsInChildren<Renderer>())
+            {
+                r.enabled = false;
+            }
         }
     }
 
@@ -35,5 +41,14 @@ public class PlayerHUD : MonoBehaviourPun, IPunObservable
     void Update()
     {
         transform.LookAt(FindObjectOfType<Camera>().transform);
+        //look x rotation
+        transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, transform.localEulerAngles.z);
+
+        float health = player.health;
+        // healthBar.transform.localScale = new Vector3(health / 100, healthBar.transform.localScale.y, healthBar.transform.localScale.z);
+        healthBar.rectTransform.localScale = new Vector3(health / 100, healthBar.rectTransform.localScale.y, healthBar.rectTransform.localScale.z);
+        // healthBar.transform.localPosition = new Vector3(health / 100, healthBar.transform.localPosition.y, healthBar.transform.localPosition.z);
+        healthBar.rectTransform.localPosition = new Vector3(health / 100 - 1, healthBar.rectTransform.localPosition.y, 0);
+
     }
 }
