@@ -2,8 +2,9 @@
     "files.exclude": {
         "**/.DS_Store": true,
         "**/.git": true,
-        "**/.gitignore": true,
+        "**/.vs": true,
         "**/.gitmodules": true,
+        "**/.vsconfig": true,
         "**/*.booproj": true,
         "**/*.pidb": true,
         "**/*.suo": true,
@@ -52,6 +53,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.preferCSharpExtension": true,
     "dotnet.defaultSolution": "graphics-project.sln"
 }

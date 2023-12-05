@@ -4,86 +4,61 @@
         {
             "userAdded": false,
             "type": "UnityEngine.AnimationClip",
-            "ignore": false,
-            "defaultInstantiationMode": 0,
-            "supportsModification": true
+            "defaultInstantiationMode": 0
         },
         {
             "userAdded": false,
             "type": "UnityEditor.Animations.AnimatorController",
-            "ignore": false,
-            "defaultInstantiationMode": 0,
-            "supportsModification": true
+            "defaultInstantiationMode": 0
         },
         {
             "userAdded": false,
             "type": "UnityEngine.AnimatorOverrideController",
-            "ignore": false,
-            "defaultInstantiationMode": 0,
-            "supportsModification": true
+            "defaultInstantiationMode": 0
         },
         {
             "userAdded": false,
             "type": "UnityEditor.Audio.AudioMixerController",
-            "ignore": false,
-            "defaultInstantiationMode": 0,
-            "supportsModification": true
+            "defaultInstantiationMode": 0
         },
         {
             "userAdded": false,
             "type": "UnityEngine.ComputeShader",
             "ignore": true,
             "defaultInstantiationMode": 1,
-            "supportsModification": true
-        },
-        {
-            "userAdded": false,
-            "type": "UnityEngine.Cubemap",
-            "ignore": false,
-            "defaultInstantiationMode": 0,
-            "supportsModification": true
+            "supportsModification": true,
+            "defaultInstantiationMode": 1
+            "defaultInstantiationMode": 0
         },
         {
             "userAdded": false,
             "type": "UnityEngine.GameObject",
-            "ignore": false,
-            "defaultInstantiationMode": 0,
-            "supportsModification": true
+            "defaultInstantiationMode": 0
         },
         {
             "userAdded": false,
             "type": "UnityEditor.LightingDataAsset",
-            "ignore": false,
-            "defaultInstantiationMode": 0,
-            "supportsModification": false
+            "defaultInstantiationMode": 0
         },
         {
             "userAdded": false,
             "type": "UnityEngine.LightingSettings",
-            "ignore": false,
-            "defaultInstantiationMode": 0,
-            "supportsModification": true
+            "defaultInstantiationMode": 0
         },
         {
             "userAdded": false,
             "type": "UnityEngine.Material",
-            "ignore": false,
-            "defaultInstantiationMode": 0,
-            "supportsModification": true
+            "defaultInstantiationMode": 0
         },
         {
             "userAdded": false,
             "type": "UnityEditor.MonoScript",
-            "ignore": true,
-            "defaultInstantiationMode": 1,
-            "supportsModification": true
+            "defaultInstantiationMode": 1
         },
         {
             "userAdded": false,
             "type": "UnityEngine.PhysicMaterial",
-            "ignore": false,
-            "defaultInstantiationMode": 0,
-            "supportsModification": true
+            "defaultInstantiationMode": 0
         },
         {
             "userAdded": false,
@@ -91,13 +66,10 @@
             "ignore": false,
             "defaultInstantiationMode": 0,
             "supportsModification": true
-        },
-        {
-            "userAdded": false,
-            "type": "UnityEngine.Rendering.PostProcessing.PostProcessProfile",
-            "ignore": false,
+            "defaultInstantiationMode": 0,
             "defaultInstantiationMode": 0,
             "supportsModification": true
+            "defaultInstantiationMode": 0
         },
         {
             "userAdded": false,
