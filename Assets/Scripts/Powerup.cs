@@ -7,7 +7,7 @@ using UnityEngine;
 public class Powerup : MonoBehaviour
 {
 
-    enum PowerupType {
+    public enum PowerupType {
         HEALTH,
         ROCKETS
     }
@@ -19,7 +19,7 @@ public class Powerup : MonoBehaviour
     public float healingAmount = 25f;
 
     Vector3 initialPosition;
-    PowerupType type = PowerupType.HEALTH;
+    public PowerupType type = PowerupType.HEALTH;
 
 
     void Start()
@@ -49,7 +49,7 @@ public class Powerup : MonoBehaviour
                 player.GetComponent<Target>().health = Mathf.Min(100, player.GetComponent<Target>().health + healingAmount);
                 break;
             case PowerupType.ROCKETS:
-                Debug.Log("Say Gex");
+                player.GetComponent<PlayerController>().rocketCount += 2;
                 break;
         }
 

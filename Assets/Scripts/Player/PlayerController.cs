@@ -1,13 +1,13 @@
 using UnityEngine;
 using Photon.Pun;
 using System;
+using TMPro;
 //takes care of
 public class PlayerController : MonoBehaviourPun, IPunObservable
 {
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] Transform gunOrigin;
-
 
     //laser damage per second
     [SerializeField] float laserDamage = 30;
@@ -19,6 +19,11 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     Rigidbody rb;
     LineRenderer laser;
     Camera playerCam;
+
+    public float rocketCooldown = 0.7f;
+    float cooldownCurrent;
+    public int rocketCount = 1;
+    public TMP_Text rocketText;
 
     public Color color;
 
@@ -49,6 +54,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         }
         GetComponentInChildren<Canvas>().worldCamera = FindObjectOfType<Camera>();
         Cursor.lockState = CursorLockMode.Locked;
+        cooldownCurrent = rocketCooldown;
     }
 
     private void Update()
@@ -67,7 +73,9 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         Look();
         Move();
         Jump();
-        Shoot();       
+        Shoot();
+
+        rocketText.text = "Rockets: " + rocketCount;
     }
 
     void Shoot()
@@ -106,6 +114,15 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             }
             laser.SetPosition(1, laserPosition1);
             laserHitpoint.position = laserPosition1;
+        }
+
+        //rocket stuff wooooo
+        cooldownCurrent -= Time.deltaTime;
+        if(Input.GetButtonDown("Fire2") && cooldownCurrent <= 0 && rocketCount > 0)
+        {
+            PhotonNetwork.Instantiate("Rocket", playerCam.transform.TransformPoint(Vector3.forward * 2f), Quaternion.Euler(playerCam.transform.eulerAngles));
+            rocketCount--;
+            cooldownCurrent = rocketCooldown;
         }
 
     }
@@ -177,5 +194,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         SpawnPoint[] spawns = FindObjectsOfType<SpawnPoint>();
         int spawnpoint = (int)UnityEngine.Random.Range(0, spawns.Length - 0.01f);
         transform.position = spawns[spawnpoint].transform.position;
+        rocketCount = 1;
     }
 }

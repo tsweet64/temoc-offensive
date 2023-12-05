@@ -13,14 +13,12 @@ public class Target : MonoBehaviourPun, IPunObservable
     public float health = 100;
     float overlayTimer = 0;
     HitTargetAnim hitOverlay;
-    TMP_Text healthText;
+    public TMP_Text healthText;
 
 
     void Start()
     {
         hitOverlay = GetComponentInChildren<HitTargetAnim>();
-        if(photonView.IsMine && GetComponent<PlayerController>())
-            healthText = GetComponentInChildren<TMP_Text>();
     }
 
     void Update()
