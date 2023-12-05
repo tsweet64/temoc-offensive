@@ -45,9 +45,7 @@ public class PlayerHUD : MonoBehaviourPun, IPunObservable
         transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, transform.localEulerAngles.z);
 
         float health = player.health;
-        // healthBar.transform.localScale = new Vector3(health / 100, healthBar.transform.localScale.y, healthBar.transform.localScale.z);
         healthBar.rectTransform.localScale = new Vector3(health / 100, healthBar.rectTransform.localScale.y, healthBar.rectTransform.localScale.z);
-        // healthBar.transform.localPosition = new Vector3(health / 100, healthBar.transform.localPosition.y, healthBar.transform.localPosition.z);
         healthBar.rectTransform.localPosition = new Vector3(health / 100 - 1, healthBar.rectTransform.localPosition.y, 0);
 
     }

@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 {
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
+    [SerializeField] Transform gunOrigin;
+
 
     //laser damage per second
     [SerializeField] float laserDamage = 30;
@@ -48,27 +50,24 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         GetComponentInChildren<Canvas>().worldCamera = FindObjectOfType<Camera>();
         Cursor.lockState = CursorLockMode.Locked;
     }
+
     private void Update()
     {
         GetComponent<Renderer>().material.color = color;
+        laser.SetPosition(0, gunOrigin.transform.position);
         
         //on other clients, we have to update the position of the laser!
         if (!photonView.IsMine)
         {
             laser.enabled = laserEnabled;
-            laser.SetPosition(0, cameraHolder.transform.position);
             laser.SetPosition(1, laserHitpoint.position);
             return;
         }
 
-
-
         Look();
         Move();
         Jump();
-        Shoot();
-
-       
+        Shoot();       
     }
 
     void Shoot()
@@ -85,7 +84,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         {
             laser.enabled = true;
             Vector3 laserPosition0 = playerCam.ScreenToWorldPoint(new Vector3(Screen.width / 8, Screen.height / 8, 0.1f));
-            laser.SetPosition(0, laserPosition0);
+            // laser.SetPosition(0, laserPosition0);
 
             //initialize laserPosition1 with the value that will be used if it is shot into space (IE, not hitting any object)
             Vector3 laserPosition1 = ray.origin + ray.direction * 4;

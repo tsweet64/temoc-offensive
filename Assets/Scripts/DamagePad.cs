@@ -10,7 +10,7 @@ public class DamagePad : MonoBehaviour
         Debug.Log("Hit pad");
         if(col.gameObject.GetComponent<Target>())
         {
-            col.gameObject.GetComponent<Target>().registerHit(10 * Time.deltaTime);
+            col.gameObject.GetComponent<Target>().registerHit(1000);
         }
     }
 }
